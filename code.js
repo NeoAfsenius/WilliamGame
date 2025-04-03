@@ -8,13 +8,13 @@ canvas.style.height = "100%";
 const c = canvas.getContext("2d");
 
 class ball {
-  constructor(name, x, y, material, speed, radius, grav /*Neo tyckte det var coolt*/) {
-    this.velocity = 0;
-    this.name = false;
+  constructor(active, x, y, material, xvelocity, radius, grav /*Neo tyckte det var coolt*/) {
+    this.velocity = -10;
+    this.active = false;
     this.x = x;
     this.y = y;
     this.material = material;
-    this.speed = speed;
+    this.xvelocity = xvelocity;
     this.radius = radius;
     this.grav = grav;
   }
@@ -23,32 +23,24 @@ class ball {
     this.velocity += this.grav; // Kör gravitation
     this.y += this.velocity; // Rör bollen ner
 
-    let marken = canvas.height - canvas.height / 10 - this.radius;
+    let ground = canvas.height - canvas.height / 10 - this.radius;
 
-    if (this.y >= marken) {
-      this.y = marken;
+    if (this.y >= ground) {
+      this.y = ground;
       this.velocity = -this.velocity * 0.9;
     }
+    this.x += this.xvelocity; // Rör bollen sidleds
+    this.xvelocity = this.xvelocity*0.9999
+
   }
   draw() {
-    c.fillstyle = "black";
+    c.fillStyle = this.material;
     c.beginPath();
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     c.fill();
     c.stroke();
   }
 }
-const SteelBallSpawn = new ball(
-  Steelball,
-  230,
-  canvas.height - canvas.height / 10 - 100,
-  "grey",
-  10,
-  20,
-  1 //gravity multiplier
-);
-
-console.log(SteelBallSpawn);
 
 let keys = {
   //ska användas för att eventuellt använda b och w som knappar för köp och fire
@@ -63,13 +55,13 @@ document.onkeydown = function (e) {
 };
 
 document.addEventListener("mousedown", function (event) {
-  if (event.button === 0) {
+  if (event.button === 0 && ForceMouseDown===false) {
     // 0 is the left mouse button
     console.log("Mouse X:", event.clientX, "Mouse Y:", event.clientY);
     isLeftMouseDown = true; //left button pressed
-    console.log(isLeftMouseDown);
+    ForceMouseDown = true
   }
-});
+})
 
 document.addEventListener("mouseup", function (event) {
   if (event.button === 0) {
@@ -77,6 +69,8 @@ document.addEventListener("mouseup", function (event) {
     // Left mouse button released
     isLeftMouseDown = false;
     console.log(isLeftMouseDown);
+    ForceMouseDown = false
+    BallShot = false
   }
 });
 document.addEventListener("mousemove", function (event) {
@@ -101,10 +95,11 @@ console.log(
   `Bredd på canvas: ${canvas.width},
   Höjd på canvas: ${canvas.height}`
 );
-let OnOther = false;
 let isLeftMouseDown = false;
 let BallList = [];
-SteelBallSpawn.Steelball = true;
+let BallShot = false;
+let ForceMouseDown = false;
+
 
 function drawBase() {
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -114,13 +109,15 @@ function drawBase() {
   c.fillStyle = "black";
   c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
 
-  if (isLeftMouseDown === true && OnOther === false && SteelBallSpawn === true) {
-    /*Kollar om musen är i pekad och att den ingen meny är i klickad */
-    SteelBallSpawn.draw
-    BallList.push(SteelBallSpawn)
+  if (isLeftMouseDown === true && BallShot===false) {
+    const newBall = new ball(true, 230, canvas.height - canvas.height / 10 - 100, "grey", 10, 5, 0.2);
+    BallList.push(newBall);
+    BallShot = true
   }
-  SteelBallSpawn.update();
-  SteelBallSpawn.draw();
+  BallList.forEach((balls) => {
+    balls.update();
+    balls.draw();
+  });
   window.requestAnimationFrame(drawBase);
 }
 window.requestAnimationFrame(drawBase);

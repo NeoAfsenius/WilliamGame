@@ -43,7 +43,7 @@ document.addEventListener("mousemove", function (event) {
 
 class ball {
   constructor(active, x, y, material, radius, grav /*Neo tyckte det var coolt*/, angle) {
-    this.totalVelocity = Math.sqrt(15 ** 2 + 15 ** 2);
+    this.totalVelocity = Math.sqrt(15 ** 2 + 15 ** 2); //ger hypotenusa
     this.xvelocity = Math.cos(angle) * this.totalVelocity; //ger oss x kated
     this.yvelocity = Math.sin(angle) * this.totalVelocity; //ger oss y kated
     this.active = false;
@@ -84,14 +84,30 @@ class bird {
     this.material = "red";
   }
   update() {
+    let ground = canvas.height - canvas.height / 10 - this.radius;
     this.x += this.xvelocity; // Rör bollen sidleds
+    if (this.y >= ground) {
+      this.y = ground; //gör så att den hamnar på marken även om den är någon pixel nere egentligen
+      this.yvelocity = -this.yvelocity * 0.7; //gör så att marken ger energiförlust för y-axel och vänder på riktningen så att den åker upp igen
+    }
   }
   draw() {
     c.fillStyle = "black";
-    c.fillRect(this.x,this.y, 30, 30);
+    c.fillRect(this.x, this.y, 30, 30);
   }
 }
-
+class level {
+  constructor(level) {
+    this.level = level;
+    this.TotalBird = Math.ceil(3 + 2.5 * Math.log2(level + 1));
+    if (level > 3) {
+      this.movingBirds = true;
+    } else {
+      this.movingBirds = false;
+    }
+    this.LevelIsOn = true;
+  }
+}
 let keys = {
   //ska användas för att eventuellt använda b och w som knappar för köp och fire
   b: false,
@@ -125,9 +141,10 @@ let BallShot = false;
 let ForceMouseDown = false;
 
 function SpawnBird() {
-  const randomDelay = randomIntFromRange(1000, 3000);
+  const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
 
-  setTimeout(function () {
+  setTimeout(() => {
+    // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
     var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, canvas.height - 1000));
     BirdList.push(newBird);
     console.log(BirdList);
@@ -152,6 +169,7 @@ function drawBase() {
     }
   }
   BallList.forEach((balls) => {
+    //gör dessa två functioner för alla elements i listan
     balls.update();
     balls.draw();
   });

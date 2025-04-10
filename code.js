@@ -80,26 +80,46 @@ class bird {
     this.yvelocity = 0;
     this.x = x;
     this.y = y;
+    this.sineAngle = 0;
     this.active = true;
     this.material = "red";
   }
   update() {
-    let ground = canvas.height - canvas.height / 10 - this.radius;
-    this.x += this.xvelocity; // Rör bollen sidleds
-    if (this.y >= ground) {
-      this.y = ground; //gör så att den hamnar på marken även om den är någon pixel nere egentligen
-      this.yvelocity = -this.yvelocity * 0.7; //gör så att marken ger energiförlust för y-axel och vänder på riktningen så att den åker upp igen
+    if (this.hasSineWave === true){
+      this.sineAngle += this.waveSpeed
+      this.y = this.baseY + Math.sin(this.sineAngle) * this.waveHeight
+    } 
+    else{
+      this.y += this.yvelocity
     }
-  }
+    let ground = canvas.height - canvas.height / 10 - 30
+    this.x += this.xvelocity; // Rör bollen sidleds
+
+    if (this.y >= ground) {
+      this.yvelocity = 0
+      this.y = ground
+    }
+
+    for (let i = 0; i < ballList.length; i++) {
+      const element = ballList[i];
+      if ((this.x - 15) < element.x && (this.x + 45) > element.x && (this.y - 15) < element.y && (this.y + 45) > element.y) {
+        
+        this.xvelocity = 0
+        this.yvelocity = 10
+        ballList.splice(i, 1)
+        this.hasSineWave=false
+        }
+      }
+    }
   draw() {
     c.fillStyle = "black";
     c.fillRect(this.x, this.y, 30, 30);
-  }
+}
 }
 class level {
   constructor(level) {
     this.level = level;
-    this.TotalBird = Math.ceil(3 + 2.5 * Math.log2(level + 1));
+    this.totalBird = Math.ceil(3 + 2.5 * Math.log2(level + 1));
     if (level > 3) {
       this.movingBirds = true;
     } else {
@@ -135,22 +155,51 @@ console.log(
 );
 
 let isLeftMouseDown = false;
-let BallList = [];
-let BirdList = [];
+let ballList = [];
+let birdList = [];
 let BallShot = false;
 let ForceMouseDown = false;
+let movingBirds=true
 
 function SpawnBird() {
   const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
-
-  setTimeout(() => {
-    // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
-    var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, canvas.height - 1000));
-    BirdList.push(newBird);
-    console.log(BirdList);
-    SpawnBird();
-  }, randomDelay); //keep spawning the bird
+  if (movingBirds=true) {
+    spawnOrNo = randomIntFromRange(1,4)
+    if (spawnOrNo===1){
+      setTimeout(() => {
+        // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
+        var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, 200));
+        newBird.baseY = newBird.y
+        newBird.sineAngle = Math.random() * Math.PI * 2
+        newBird.waveSpeed = 0.05 + Math.random() * 0.1
+        newBird.waveHeight = 30 + Math.random() * 20
+        newBird.hasSineWave = true
+        birdList.push(newBird)
+        console.log("moving")
+        SpawnBird()
+      }, randomDelay); //keep spawning the bird
+    }
+    else{
+      setTimeout(() => {
+        // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
+        var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, canvas.height - 1000));
+        birdList.push(newBird);
+        console.log(birdList);
+        SpawnBird();
+      }, randomDelay); //keep spawning the bird
+    }
+  }
+  else{
+    setTimeout(() => {
+      // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
+      var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, canvas.height - 1000));
+      birdList.push(newBird);
+      console.log(birdList);
+      SpawnBird();
+    }, randomDelay); //keep spawning the bird
+  }
 }
+
 SpawnBird();
 function drawBase() {
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -162,18 +211,18 @@ function drawBase() {
 
   if (isLeftMouseDown === true && BallShot === false) {
     const newBall = new ball(true, 230, canvas.height - canvas.height / 10 - 100, "grey", 5, 0.2, BallToMouseAngle);
-    BallList.push(newBall);
+    ballList.push(newBall);
     BallShot = true;
-    if (BallList.length > 20) {
-      BallList.splice(0, 1);
+    if (ballList.length > 20) {
+      ballList.splice(0, 1);
     }
   }
-  BallList.forEach((balls) => {
+  ballList.forEach((balls) => {
     //gör dessa två functioner för alla elements i listan
     balls.update();
     balls.draw();
   });
-  BirdList.forEach((bird) => {
+  birdList.forEach((bird) => {
     bird.update();
     bird.draw();
   });

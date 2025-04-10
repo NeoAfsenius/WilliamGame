@@ -158,7 +158,7 @@ console.log(
 function SpawnBird() {
   const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
   if ((movingBirds = true)) {
-    spawnOrNo = randomIntFromRange(1, 4);
+    spawnOrNo = randomIntFromRange(1, 3);
     if (spawnOrNo === 1) {
       setTimeout(() => {
         // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
@@ -174,7 +174,7 @@ function SpawnBird() {
     } else {
       setTimeout(() => {
         // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
-        var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, canvas.height - 1000));
+        var newBird = new bird(true, canvas.width + 50, randomIntFromRange(50, canvas.height - canvas.height / 10 - 30));
         birdList.push(newBird);
         console.log(birdList);
         SpawnBird();
@@ -183,7 +183,7 @@ function SpawnBird() {
   } else {
     setTimeout(() => {
       // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
-      var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, canvas.height - 1000));
+      var newBird = new bird(true, canvas.width + 50, randomIntFromRange(50, canvas.height - canvas.height / 10 - 30));
       birdList.push(newBird);
       console.log(birdList);
       SpawnBird();

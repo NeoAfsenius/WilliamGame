@@ -83,38 +83,39 @@ class bird {
     this.sineAngle = 0;
     this.active = true;
     this.material = "red";
+    this.markForDespawn = false
+    this.timeSinceMark = 0
   }
   update() {
-    if (this.hasSineWave === true){
-      this.sineAngle += this.waveSpeed
-      this.y = this.baseY + Math.sin(this.sineAngle) * this.waveHeight
-    } 
-    else{
-      this.y += this.yvelocity
+    if (this.hasSineWave === true) {
+      this.sineAngle += this.waveSpeed;
+      this.y = this.baseY + Math.sin(this.sineAngle) * this.waveHeight;
+    } else {
+      this.y += this.yvelocity;
     }
-    let ground = canvas.height - canvas.height / 10 - 30
+    let ground = canvas.height - canvas.height / 10 - 30;
     this.x += this.xvelocity; // Rör bollen sidleds
 
     if (this.y >= ground) {
-      this.yvelocity = 0
-      this.y = ground
+      this.yvelocity = 0;
+      this.y = ground;
     }
 
     for (let i = 0; i < ballList.length; i++) {
       const element = ballList[i];
-      if ((this.x - 15) < element.x && (this.x + 45) > element.x && (this.y - 15) < element.y && (this.y + 45) > element.y) {
-        
-        this.xvelocity = 0
-        this.yvelocity = 10
-        ballList.splice(i, 1)
-        this.hasSineWave=false
-        }
+      if (this.x - 15 < element.x && this.x + 45 > element.x && this.y - 15 < element.y && this.y + 45 > element.y) {
+        this.xvelocity = 0;
+        this.yvelocity = 10;
+        ballList.splice(i, 1);
+        this.hasSineWave = false;
+        this.markForDespawn = true
       }
     }
+  }
   draw() {
     c.fillStyle = "black";
     c.fillRect(this.x, this.y, 30, 30);
-}
+  }
 }
 class level {
   constructor(level) {
@@ -154,32 +155,24 @@ console.log(
   Höjd på canvas: ${canvas.height}`
 );
 
-let isLeftMouseDown = false;
-let ballList = [];
-let birdList = [];
-let BallShot = false;
-let ForceMouseDown = false;
-let movingBirds=true
-
 function SpawnBird() {
   const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
-  if (movingBirds=true) {
-    spawnOrNo = randomIntFromRange(1,4)
-    if (spawnOrNo===1){
+  if ((movingBirds = true)) {
+    spawnOrNo = randomIntFromRange(1, 4);
+    if (spawnOrNo === 1) {
       setTimeout(() => {
         // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
         var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, 200));
-        newBird.baseY = newBird.y
-        newBird.sineAngle = Math.random() * Math.PI * 2
-        newBird.waveSpeed = 0.05 + Math.random() * 0.1
-        newBird.waveHeight = 30 + Math.random() * 20
-        newBird.hasSineWave = true
-        birdList.push(newBird)
-        console.log("moving")
-        SpawnBird()
+        newBird.baseY = newBird.y;
+        newBird.sineAngle = Math.random() * Math.PI * 2;
+        newBird.waveSpeed = 0.05 + Math.random() * 0.1;
+        newBird.waveHeight = 30 + Math.random() * 20;
+        newBird.hasSineWave = true;
+        birdList.push(newBird);
+        console.log("moving");
+        SpawnBird();
       }, randomDelay); //keep spawning the bird
-    }
-    else{
+    } else {
       setTimeout(() => {
         // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
         var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, canvas.height - 1000));
@@ -188,8 +181,7 @@ function SpawnBird() {
         SpawnBird();
       }, randomDelay); //keep spawning the bird
     }
-  }
-  else{
+  } else {
     setTimeout(() => {
       // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
       var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, canvas.height - 1000));
@@ -200,32 +192,57 @@ function SpawnBird() {
   }
 }
 
+let isLeftMouseDown = false;
+let ballList = [];
+let birdList = [];
+let BallShot = false;
+let ForceMouseDown = false;
+let movingBirds = true;
+let LevelIsOn = true
 SpawnBird();
+
 function drawBase() {
-  c.clearRect(0, 0, canvas.width, canvas.height);
-  c.fillStyle = "green";
-  c.fillRect(0, canvas.height - canvas.height / 10, canvas.width, canvas.height / 10);
+  if (LevelIsOn === false) {
+    c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
+    ballList = []
+    birdList = []
+    c.fillStyle = "grey"
+    c.fillRect(0, canvas.height - canvas.height / 2, canvas.width, canvas.height / 3);
 
-  c.fillStyle = "black";
-  c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
+  } else {
+    c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
+    c.fillStyle = "green";
+    c.fillRect(0, canvas.height - canvas.height / 10, canvas.width, canvas.height / 10);
 
-  if (isLeftMouseDown === true && BallShot === false) {
-    const newBall = new ball(true, 230, canvas.height - canvas.height / 10 - 100, "grey", 5, 0.2, BallToMouseAngle);
-    ballList.push(newBall);
-    BallShot = true;
-    if (ballList.length > 20) {
-      ballList.splice(0, 1);
+    c.fillStyle = "black";
+    c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
+
+    if (isLeftMouseDown === true && BallShot === false) {
+      const newBall = new ball(true, 230, canvas.height - canvas.height / 10 - 100, "grey", 5, 0.2, BallToMouseAngle);
+      ballList.push(newBall);
+      BallShot = true;
+      if (ballList.length > 20) {
+        ballList.splice(0, 1);
+      }
     }
+    ballList.forEach((balls) => {
+      //gör dessa två functioner för alla elements i listan
+      balls.update();
+      balls.draw();
+    });
+    birdList.forEach((bird) => {
+      //gör dessa två functioner för alla elements i listan
+      bird.update();
+      bird.draw();
+      if (bird.markForDespawn===true) {
+        bird.timeSinceMark+=1 //antar att den kör 60fps
+        if (bird.timeSinceMark>180) {
+          let index = birdList.indexOf(bird);
+          birdList.splice(index,1)
+        }
+      }
+    });
   }
-  ballList.forEach((balls) => {
-    //gör dessa två functioner för alla elements i listan
-    balls.update();
-    balls.draw();
-  });
-  birdList.forEach((bird) => {
-    bird.update();
-    bird.draw();
-  });
   window.requestAnimationFrame(drawBase);
 }
 window.requestAnimationFrame(drawBase);

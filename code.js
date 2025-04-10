@@ -80,16 +80,16 @@ class bird {
     this.yvelocity = 0;
     this.x = x;
     this.y = y;
-    this.sineAngle = 0;
+    this.sinAngle = 0;
     this.active = true;
     this.material = "red";
     this.markForDespawn = false
-    this.timeSinceMark = 0
+    this.timeSinceDewspawnMark = 0
   }
   update() {
     if (this.hasSineWave === true) {
-      this.sineAngle += this.waveSpeed;
-      this.y = this.baseY + Math.sin(this.sineAngle) * this.waveHeight;
+      this.sinAngle += this.waveSpeed; 
+      this.y = this.baseY + Math.sin(this.sinAngle) * this.waveHeight;
     } else {
       this.y += this.yvelocity;
     }
@@ -163,10 +163,9 @@ function SpawnBird() {
       setTimeout(() => {
         // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
         var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, 200));
-        newBird.baseY = newBird.y;
-        newBird.sineAngle = Math.random() * Math.PI * 2;
-        newBird.waveSpeed = 0.05 + Math.random() * 0.1;
-        newBird.waveHeight = 30 + Math.random() * 20;
+        newBird.baseY = newBird.y; //är startpunkt i y-axel
+        newBird.waveSpeed = 0.05 + Math.random() * 0.1; //hastighet
+        newBird.waveHeight = 30 + Math.random() * 20; //amplitud
         newBird.hasSineWave = true;
         birdList.push(newBird);
         console.log("moving");
@@ -235,8 +234,8 @@ function drawBase() {
       bird.update();
       bird.draw();
       if (bird.markForDespawn===true) {
-        bird.timeSinceMark+=1 //antar att den kör 60fps
-        if (bird.timeSinceMark>180) {
+        bird.timeSinceDewspawnMark+=1 //antar att den kör 60fps
+        if (bird.timeSinceDewspawnMark>180) {
           let index = birdList.indexOf(bird);
           birdList.splice(index,1)
         }

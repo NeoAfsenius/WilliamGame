@@ -13,7 +13,7 @@ function randomIntFromRange(min, max) {
 }
 
 document.addEventListener("mousedown", function (event) {
-  if (event.button === 0 && ForceMouseDown === false) {
+  if (event.button === 0 && forceMouseDown === false) {
     // 0 is the left mouse button
     console.log("Mouse X:", event.clientX, "Mouse Y:", event.clientY);
     MouseX = event.clientX;
@@ -22,7 +22,7 @@ document.addEventListener("mousedown", function (event) {
     BalltoMousey = MouseY - (canvas.height - canvas.height / 10 - 100);
     BallToMouseAngle = Math.atan2(BalltoMousey, BalltoMouseX);
     isLeftMouseDown = true; //left button pressed
-    ForceMouseDown = true;
+    forceMouseDown = true;
   }
 });
 
@@ -32,7 +32,7 @@ document.addEventListener("mouseup", function (event) {
     // Left mouse button released
     isLeftMouseDown = false;
     console.log(isLeftMouseDown);
-    ForceMouseDown = false;
+    forceMouseDown = false;
     BallShot = false;
   }
 });
@@ -83,13 +83,14 @@ class bird {
     this.sinAngle = 0;
     this.active = true;
     this.material = "red";
-    this.markForDespawn = false
-    this.timeSinceDewspawnMark = 0
+    this.markForDespawn = false;
+    this.timeSinceDewspawnMark = 0;
+    this.outsideMark = false;
   }
   update() {
     if (this.hasSineWave === true) {
-      this.sinAngle += this.waveSpeed; 
-      this.y = this.baseY + Math.sin(this.sinAngle) * this.waveHeight;
+      this.sinAngle += this.waveSpeed;
+      this.y = this.baseY + Math.sin(this.sinAngle) * this.waveAmp;
     } else {
       this.y += this.yvelocity;
     }
@@ -108,8 +109,20 @@ class bird {
         this.yvelocity = 10;
         ballList.splice(i, 1);
         this.hasSineWave = false;
-        this.markForDespawn = true
+        this.markForDespawn = true;
       }
+    }
+
+    if (this.x <= -31) {
+      this.xvelocity = 0;
+      this.hasSineWave = false;
+      this.x = 300;
+      this.y = -800;
+      this.yvelocity = 0;
+      birdMissed.push("kuk");
+      birdGone.push("gone");
+      console.log("gone");
+      this.outsideMark = true;
     }
   }
   draw() {
@@ -120,11 +133,12 @@ class bird {
 class level {
   constructor(level) {
     this.level = level;
-    this.totalBird = Math.ceil(3 + 2.5 * Math.log2(level + 1));
-    if (level > 3) {
+    this.maxBirdListLength = Math.ceil(3 + 2.5 * Math.log2(level + 1)); //kurva för fåglar som bestämmer mängd per level
+    if (this.level > 3) {
       this.movingBirds = true;
     } else {
       this.movingBirds = false;
+      console.log("tihi");
     }
     this.LevelIsOn = true;
   }
@@ -156,21 +170,35 @@ console.log(
 );
 
 function SpawnBird() {
-  const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
-  if ((movingBirds = true)) {
-    spawnOrNo = randomIntFromRange(1, 3);
-    if (spawnOrNo === 1) {
-      setTimeout(() => {
-        // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
-        var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, 200));
-        newBird.baseY = newBird.y; //är startpunkt i y-axel
-        newBird.waveSpeed = 0.05 + Math.random() * 0.1; //hastighet
-        newBird.waveHeight = 30 + Math.random() * 20; //amplitud
-        newBird.hasSineWave = true;
-        birdList.push(newBird);
-        console.log("moving");
-        SpawnBird();
-      }, randomDelay); //keep spawning the bird
+  if (birdList.length >= currentlevel.maxBirdListLength) {
+    LevelIsOn = false;
+    console.log("not true");
+    console.log(LevelIsOn);
+  } else {
+    const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
+    if (currentlevel.movingBirds === true) {
+      spawnOrNo = randomIntFromRange(1, 3);
+      if (spawnOrNo === 1) {
+        setTimeout(() => {
+          // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
+          var newBird = new bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, 200));
+          newBird.baseY = newBird.y; //är startpunkt i y-axel
+          newBird.waveSpeed = 0.05 + Math.random() * 0.1; //hastighet
+          newBird.waveAmp = 30 + Math.random() * 20; //amplitud
+          newBird.hasSineWave = true;
+          birdList.push(newBird);
+          console.log("moving");
+          SpawnBird();
+        }, randomDelay); //keep spawning the bird
+      } else {
+        setTimeout(() => {
+          // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
+          var newBird = new bird(true, canvas.width + 50, randomIntFromRange(50, canvas.height - canvas.height / 10 - 30));
+          birdList.push(newBird);
+          console.log(birdList);
+          SpawnBird();
+        }, randomDelay); //keep spawning the bird
+      }
     } else {
       setTimeout(() => {
         // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
@@ -180,38 +208,35 @@ function SpawnBird() {
         SpawnBird();
       }, randomDelay); //keep spawning the bird
     }
-  } else {
-    setTimeout(() => {
-      // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
-      var newBird = new bird(true, canvas.width + 50, randomIntFromRange(50, canvas.height - canvas.height / 10 - 30));
-      birdList.push(newBird);
-      console.log(birdList);
-      SpawnBird();
-    }, randomDelay); //keep spawning the bird
   }
 }
 
 let isLeftMouseDown = false;
 let ballList = [];
 let birdList = [];
+let birdGone = [];
+let birdMissed = [];
+let birdHit = birdList.length - birdMissed.length;
 let BallShot = false;
-let ForceMouseDown = false;
+let forceMouseDown = false;
 let movingBirds = true;
-let LevelIsOn = true
+let LevelIsOn = true;
+let Levelnumber = 1;
+let currentlevel = new level(1);
 SpawnBird();
 
 function drawBase() {
-  if (LevelIsOn === false) {
+  if (LevelIsOn === false && birdGone.length >= currentlevel.maxBirdListLength) {
     c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
-    ballList = []
-    birdList = []
-    c.fillStyle = "grey"
+    ballList = [];
+    birdList = [];
+    c.fillStyle = "grey";
     c.fillRect(0, canvas.height - canvas.height / 2, canvas.width, canvas.height / 3);
-
   } else {
     c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
     c.fillStyle = "green";
     c.fillRect(0, canvas.height - canvas.height / 10, canvas.width, canvas.height / 10);
+    c.fillText("Dollares: 12", 20, 20);
 
     c.fillStyle = "black";
     c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
@@ -233,11 +258,15 @@ function drawBase() {
       //gör dessa två functioner för alla elements i listan
       bird.update();
       bird.draw();
-      if (bird.markForDespawn===true) {
-        bird.timeSinceDewspawnMark+=1 //antar att den kör 60fps
-        if (bird.timeSinceDewspawnMark>180) {
-          let index = birdList.indexOf(bird);
-          birdList.splice(index,1)
+      if (bird.markForDespawn === true) {
+        bird.timeSinceDewspawnMark += 1; //antar att den kör 60fps
+        if (bird.timeSinceDewspawnMark > 180) {
+          bird.xvelocity = 0;
+          bird.hasSineWave = false;
+          bird.x = 300;
+          bird.y = -800;
+          bird.yvelocity = 0;
+          birdGone.push("gone");
         }
       }
     });

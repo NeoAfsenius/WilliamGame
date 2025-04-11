@@ -33,7 +33,7 @@ document.addEventListener("mouseup", function (event) {
     isLeftMouseDown = false;
     console.log(isLeftMouseDown);
     forceMouseDown = false;
-    BallShot = false;
+    ballShot = false;
   }
 });
 document.addEventListener("mousemove", function (event) {
@@ -140,7 +140,7 @@ class level {
       this.movingBirds = false;
       console.log("tihi");
     }
-    this.LevelIsOn = true;
+    this.levelIsOn = true;
   }
 }
 let keys = {
@@ -171,9 +171,9 @@ console.log(
 
 function SpawnBird() {
   if (birdList.length >= currentlevel.maxBirdListLength) {
-    LevelIsOn = false;
+    levelIsOn = false;
     console.log("not true");
-    console.log(LevelIsOn);
+    console.log(levelIsOn);
   } else {
     const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
     if (currentlevel.movingBirds === true) {
@@ -217,21 +217,33 @@ let birdList = [];
 let birdGone = [];
 let birdMissed = [];
 let birdHit = birdList.length - birdMissed.length;
-let BallShot = false;
+let ballShot = false;
 let forceMouseDown = false;
 let movingBirds = true;
-let LevelIsOn = true;
-let Levelnumber = 1;
+let levelIsOn = true;
+let levelNumber = 1;
 let currentlevel = new level(1);
 SpawnBird();
 
 function drawBase() {
-  if (LevelIsOn === false && birdGone.length >= currentlevel.maxBirdListLength) {
+  if (levelIsOn === false && birdGone.length >= currentlevel.maxBirdListLength) {
     c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
     ballList = [];
     birdList = [];
     c.fillStyle = "grey";
     c.fillRect(0, canvas.height - canvas.height / 2, canvas.width, canvas.height / 3);
+
+    c.fillStyle ="grey"
+    c.font ="30px Arial"
+    c.fillText("Press Enter to go to the next level", 100, canvas.height/2)
+
+    if (keys.Enter){
+      levelNumber += 1
+      currentlevel = new level(levelNumber)
+      birdGone = []
+      levelIsOn = true
+      SpawnBird()
+    }
   } else {
     c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
     c.fillStyle = "green";
@@ -241,10 +253,10 @@ function drawBase() {
     c.fillStyle = "black";
     c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
 
-    if (isLeftMouseDown === true && BallShot === false) {
+    if (isLeftMouseDown === true && ballShot === false) {
       const newBall = new ball(true, 230, canvas.height - canvas.height / 10 - 100, "grey", 5, 0.2, BallToMouseAngle);
       ballList.push(newBall);
-      BallShot = true;
+      ballShot = true;
       if (ballList.length > 20) {
         ballList.splice(0, 1);
       }

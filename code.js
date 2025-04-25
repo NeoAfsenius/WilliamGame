@@ -1,5 +1,7 @@
+import {spawnBird} from "./spawn.js"
 import {Ball,Bird,Level} from "./classes.js";
 import {keys, mouse , isLeftMouseDown,forceMouseDown,shopMenu, mouseX, mouseY,ballToMouseAngle,balltoMouseX,balltoMousey,allInputDocument, hasABallBeenShotThisClick, setHasBallBeenShot} from "./input.js"
+export {birdGone,birdList,currentlevel,levelIsOn,randomIntFromRange}
 console.log("sigma boi");
 let canvas = document.querySelector("canvas");
 allInputDocument(canvas)
@@ -7,20 +9,28 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.style.width = "100%";
 canvas.style.height = "100%";
+
 const c = canvas.getContext("2d");
 const grassImage = new Image();
+
 grassImage.src = "./img/grass.png"
 const skyImage = new Image()
+
 skyImage.src = "./img/sky.png"
 const characterImage = new Image()
+
 characterImage.src = "./img/character.png"
 export const basicBallImage = new Image()
+
 basicBallImage.src = "./img/basicball.png"
 export const birdImage1 =  new Image()
+
 birdImage1.src = "./img/bird1.png"
 export const birdImage2 =  new Image()
+
 birdImage2.src = "./img/bird2.png"
 export const deadBird =  new Image()
+
 deadBird.src = "./img/deadbird.png"
 
 
@@ -34,6 +44,9 @@ function decreaseDollares(amount) {
 function birdGoneAdder() {
   birdGone += 1
 }
+export function changeLevelValue() {
+  levelIsOn = !levelIsOn
+}
 //random number generator, mindre matte i koden
 function randomIntFromRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -42,48 +55,7 @@ console.log(
   `Bredd på canvas: ${canvas.width},
   Höjd på canvas: ${canvas.height}`
 );
-function SpawnBird() {
-  if (birdGone >= currentlevel.maxBirdListLength) {
-    levelIsOn = false;
-  } else if (birdList.length < currentlevel.maxBirdListLength) {
-    console.log(currentlevel.maxBirdListLength);
-    const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
-    if (currentlevel.movingBirds === true) {
-      let spawnOrNo = randomIntFromRange(1, 3);
-      if (spawnOrNo === 1) {
-        setTimeout(() => {
-          // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
-          var newBird = new Bird(true, canvas.width + 50, randomIntFromRange(canvas.height - 200, 200));
-          newBird.baseY = newBird.y; //är startpunkt i y-axel
-          newBird.waveSpeed = 0.05 + Math.random() * 0.1; //hastighet
-          newBird.waveAmp = 30 + Math.random() * 20; //amplitud
-          newBird.hasSineWave = true;
-          birdList.push(newBird);
-          console.log("moving");
-          SpawnBird();
-        }, randomDelay); //keep spawning the bird
-      } else {
-        setTimeout(() => {
-          // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
-          var newBird = new Bird(true, canvas.width + 50, randomIntFromRange(50, canvas.height - canvas.height / 10 - 30));
-          birdList.push(newBird);
-          console.log(birdList);
-          SpawnBird();
-        }, randomDelay); //keep spawning the bird
-      }
-    } else {
-      setTimeout(() => {
-        // => betyder att du skapar en function utan namn som du bara kan använda för detta tilfälle
-        var newBird = new Bird(true, canvas.width + 50, randomIntFromRange(50, canvas.height - canvas.height / 10 - 30));
-        birdList.push(newBird);
-        console.log(birdList);
-        SpawnBird();
-      }, randomDelay); //keep spawning the bird
-    }
-  } else {
-    setTimeout(SpawnBird, 500);
-  }
-}
+
 
 let ballList = [];
 let birdList = [];
@@ -97,7 +69,7 @@ let currentlevel = new Level(1);
 let dollares = 0;
 let currentMaxBulletsPerLevel = 30
 let currentBulletAmount = 30
-SpawnBird();
+spawnBird();
 
 function drawBase() {
   if (levelIsOn === false && birdGone >= currentlevel.maxBirdListLength && shopMenu === false) {
@@ -108,7 +80,7 @@ function drawBase() {
       birdGone = 0;
       levelIsOn = true;
       currentBulletAmount = currentMaxBulletsPerLevel
-      SpawnBird();
+      spawnBird();
     }
   } else if (shopMenu === true ) {
     c.clearRect(0, 0, canvas.width, canvas.height);
@@ -176,9 +148,14 @@ function drawBasicGameScreen() {
     c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
     c.fillStyle = "green";
   }
-  c.font = c.font = "16px 'Press Start 2P'";
+  c.font = "16px 'Press Start 2P'";
+  c.fillStyle = "lime"
   c.fillText("Dollares:$" + dollares  + "$", 20, 20);
+  c.fillStyle = "silver"
   c.fillText("Current Bullets:" + currentBulletAmount, 20, 40)
+  c.fillStyle = "yellow"
+  c.font = "24px 'Press Start 2P'" 
+  c.fillText("Current Level Is:" + levelNumber, canvas.width/2,40)
   if (characterImage.complete) {
     c.drawImage(characterImage,100, canvas.height - canvas.height / 10 - 170, 200, 200)
   }

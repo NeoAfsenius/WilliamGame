@@ -7,9 +7,13 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.style.width = "100%";
 canvas.style.height = "100%";
-const backGroundImage = new Image()
-backGroundImage.src = ""
 const c = canvas.getContext("2d");
+const grassImage = new Image();
+grassImage.src = "./img/grass.png"
+const skyImage = new Image()
+skyImage.src = "./img/sky.png"
+const characterImage = new Image()
+characterImage.src = "./img/character.png"
 
 //dessa functioner används för att ändra värden på variablar som gör till constanter vid import
 function increaseDollares(amount) { 
@@ -94,9 +98,8 @@ function drawBase() {
       levelIsOn = true;
       SpawnBird();
     }
-  } else if (shopMenu === true) {
+  } else if (shopMenu === true ) {
     c.clearRect(0, 0, canvas.width, canvas.height);
-
   } else {
     drawBasicGameScreen();
     if (isLeftMouseDown === true && hasABallBeenShotThisClick === false) {
@@ -151,11 +154,20 @@ function drawLevelScreen() {
 }
 function drawBasicGameScreen() {
   c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
-  c.fillStyle = "green";
-  c.fillRect(0, canvas.height - canvas.height / 10, canvas.width, canvas.height / 10);
+  if (skyImage.complete) {
+    c.drawImage(skyImage,0,0,canvas.width,canvas.height)
+  }
+  if (grassImage.complete) {
+    c.drawImage(grassImage,0,canvas.height-canvas.height/10-20,canvas.width,canvas.height/10 + 20)
+  } else{
+    c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
+    c.fillStyle = "green";
+  }
   c.font = c.font = "16px 'Press Start 2P'";
   c.fillText("Dollares: " + dollares, 20, 20);
-
-  c.fillStyle = "black";
-  c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
+  if (characterImage.complete) {
+    c.drawImage(characterImage,100, canvas.height - canvas.height / 10 - 170, 200, 200)
+  }
+//   c.fillStyle = "black";
+//   c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
 }

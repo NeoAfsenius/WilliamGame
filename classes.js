@@ -1,6 +1,7 @@
+import { basicBallImage, birdImage1, birdImage2, deadBird } from "./code.js";
 export function randomIntFromRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 export class Ball {
   constructor(active, x, y, material, radius, grav /*Neo tyckte det var coolt*/, angle) {
     this.totalVelocity = Math.sqrt(15 ** 2 + 15 ** 2); //ger hypotenusa
@@ -27,11 +28,14 @@ export class Ball {
     this.xvelocity = this.xvelocity * 0.9999; //gör vindmotstånd
   }
   draw(c) {
-    c.fillStyle = this.material;
+    c.fillStyle = this.material; //kollar bara så att kulan ligger på rätt plats
     c.beginPath();
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     c.fill();
     c.stroke();
+    if (basicBallImage.complete) {
+      c.drawImage(basicBallImage, this.x - this.radius * 4, this.y - this.radius * 4, this.radius * 8, this.radius * 8);
+    }
   }
 }
 export class Bird {
@@ -46,8 +50,10 @@ export class Bird {
     this.markForDespawn = false;
     this.timeSinceDewspawnMark = 0;
     this.outsideMark = false;
+    this.animationFrame = 0;
+    this.animationTimer = 0;
   }
-  update(canvas,ballList,birdMissed,increaseDollares,decreaseDollares,birdGoneAdder) {
+  update(canvas, ballList, birdMissed, increaseDollares, decreaseDollares, birdGoneAdder) {
     if (this.hasSineWave === true) {
       this.sinAngle += this.waveSpeed;
       this.y = this.baseY + Math.sin(this.sinAngle) * this.waveAmp;
@@ -84,7 +90,7 @@ export class Bird {
       this.y = -800;
       this.yvelocity = 0;
       birdMissed.push("kuk");
-      birdGoneAdder()
+      birdGoneAdder();
       console.log("gone");
       this.outsideMark = true;
       if (this.hasSineWave === true) {
@@ -94,10 +100,22 @@ export class Bird {
       }
       this.hasSineWave = false;
     }
+    this.animationTimer += 1;
+    if (this.animationTimer > 10) {
+      this.animationFrame = (this.animationFrame + 1) % 2;
+      this.animationTimer = 0;
+    }
   }
   draw(c) {
-    c.fillStyle = "black";
-    c.fillRect(this.x, this.y, 30, 30);
+    // c.fillStyle = "black";
+    // c.fillRect(this.x, this.y, 30, 30);
+    if (this.markForDespawn === true && deadBird.complete) {
+      c.drawImage(deadBird, this.x - 40, this.y - 40, 100, 100);
+    } else if (this.animationFrame === 0 && birdImage1.complete) {
+      c.drawImage(birdImage1, this.x - 40, this.y - 40, 120, 120);
+    } else if (birdImage2.complete) {
+      c.drawImage(birdImage2, this.x - 40, this.y - 40, 120, 120);
+    }
   }
 }
 export class Level {

@@ -14,6 +14,15 @@ const skyImage = new Image()
 skyImage.src = "./img/sky.png"
 const characterImage = new Image()
 characterImage.src = "./img/character.png"
+export const basicBallImage = new Image()
+basicBallImage.src = "./img/basicball.png"
+export const birdImage1 =  new Image()
+birdImage1.src = "./img/bird1.png"
+export const birdImage2 =  new Image()
+birdImage2.src = "./img/bird2.png"
+export const deadBird =  new Image()
+deadBird.src = "./img/deadbird.png"
+
 
 //dessa functioner används för att ändra värden på variablar som gör till constanter vid import
 function increaseDollares(amount) { 
@@ -86,6 +95,8 @@ let levelIsOn = true;
 let levelNumber = 1;
 let currentlevel = new Level(1);
 let dollares = 0;
+let currentMaxBulletsPerLevel = 30
+let currentBulletAmount = 30
 SpawnBird();
 
 function drawBase() {
@@ -96,16 +107,18 @@ function drawBase() {
       currentlevel = new Level(levelNumber);
       birdGone = 0;
       levelIsOn = true;
+      currentBulletAmount = currentMaxBulletsPerLevel
       SpawnBird();
     }
   } else if (shopMenu === true ) {
     c.clearRect(0, 0, canvas.width, canvas.height);
   } else {
     drawBasicGameScreen();
-    if (isLeftMouseDown === true && hasABallBeenShotThisClick === false) {
+    if (isLeftMouseDown === true && hasABallBeenShotThisClick === false && currentBulletAmount > 0) {
       const newBall = new Ball(true, 230, canvas.height - canvas.height / 10 - 100, "grey", 5, 0.2, ballToMouseAngle);
       ballList.push(newBall);
       setHasBallBeenShot(true) // ändrar värdet på hasABallBeenShotThisClick genom att använda en function då när man importar skapas den som en const
+      currentBulletAmount -= 1
       if (ballList.length > 20) {
         ballList.splice(0, 1);
       }
@@ -164,7 +177,8 @@ function drawBasicGameScreen() {
     c.fillStyle = "green";
   }
   c.font = c.font = "16px 'Press Start 2P'";
-  c.fillText("Dollares: " + dollares, 20, 20);
+  c.fillText("Dollares:$" + dollares  + "$", 20, 20);
+  c.fillText("Current Bullets:" + currentBulletAmount, 20, 40)
   if (characterImage.complete) {
     c.drawImage(characterImage,100, canvas.height - canvas.height / 10 - 170, 200, 200)
   }

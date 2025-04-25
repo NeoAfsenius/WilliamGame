@@ -11,7 +11,6 @@ const c = canvas.getContext("2d");
 function randomIntFromRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
 document.addEventListener("mousedown", function (event) {
   if (event.button === 0 && forceMouseDown === false) {
     // 0 is the left mouse button
@@ -36,6 +35,18 @@ document.addEventListener("mouseup", function (event) {
     hasABallBeenShotThisClick = false;
   }
 });
+document.addEventListener("keydown", function (event) {
+  if ((event.key === "b" || event.key === "B") && isBKeyPressed === false) {
+    shopMenu = !shopMenu; // flippar på booliska värdet
+    isBKeyPressed = true;
+  }
+});
+document.addEventListener("keyup", function (event) {
+  if (event.key === "b" || event.key === "B") {
+    isBKeyPressed = false;
+  }
+});
+
 document.addEventListener("mousemove", function (event) {
   mouse.x = event.clientX;
   mouse.y = event.clientY;
@@ -112,9 +123,9 @@ class bird {
         this.hasSineWave = false;
         this.markForDespawn = true;
         if (this.hasSineWave === true) {
-          dollares += 20
+          dollares += 20;
         } else {
-          dollares += 10
+          dollares += 10;
         }
       }
     }
@@ -127,10 +138,10 @@ class bird {
       birdGone += 1;
       console.log("gone");
       this.outsideMark = true;
-      if (this.hasSineWave===true) {
-        dollares-=10
+      if (this.hasSineWave === true) {
+        dollares -= 10;
       } else {
-        dollares -= 5
+        dollares -= 5;
       }
       this.hasSineWave = false;
     }
@@ -159,15 +170,13 @@ let keys = {
   w: false,
 };
 
-document.onkeydown = function (e) {
-  console.log(e); //Inparametern e innehåller ett event-objekt med information om eventet.
-  const key = e.key;
-  keys[key] = true; // Sätter t.ex. keys.w till true
+document.onkeydown = function (event) {
+  console.log(event); //Inparametern e innehåller ett event-objekt med information om eventet.
+  const keyDown = event.key;
 };
-
-document.onkeyup = function (e) {
-  const key = e.key;
-  keys[key] = false;
+document.onkeyup = function (event) {
+  console.log(event);
+  const keyUp = event.key;
 };
 var mouse = {
   x: innerWidth / 2,
@@ -220,7 +229,7 @@ function SpawnBird() {
     setTimeout(SpawnBird, 500);
   }
 }
-
+let isBKeyPressed = false;
 let isLeftMouseDown = false;
 let ballList = [];
 let birdList = [];
@@ -233,42 +242,24 @@ let movingBirds = true;
 let levelIsOn = true;
 let levelNumber = 1;
 let currentlevel = new level(1);
-let dollares = 0
-let shopMenu = false
+let dollares = 0;
+let shopMenu = false;
 SpawnBird();
 
 function drawBase() {
   if (levelIsOn === false && birdGone >= currentlevel.maxBirdListLength && shopMenu === false) {
-    c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
-    ballList = [];
-    birdList = [];
-    c.fillStyle = "grey";
-    c.fillRect(0, canvas.height - canvas.height / 2, canvas.width, canvas.height / 3);
-
-    c.fillStyle = "grey";
-    c.font = "30px Arial";
-    c.fillText("Press Enter to go to the next level", 100, canvas.height / 2);
-
+    drawLevelScreen();
     if (keys.Enter) {
       levelNumber += 1;
       currentlevel = new level(levelNumber);
       birdGone = 0;
       levelIsOn = true;
       SpawnBird();
-    } else if (keys.b || keys.B || shopMenu === true) {
-      shopMenu = true
     }
-  }else if (shopMenu === true) {
-    c.clearRect(0, 0, canvas.width, canvas.height)
+  } else if (shopMenu === true) {
+    c.clearRect(0, 0, canvas.width, canvas.height);
   } else {
-    c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
-    c.fillStyle = "green";
-    c.fillRect(0, canvas.height - canvas.height / 10, canvas.width, canvas.height / 10);
-    c.fillText("Dollares:" + dollares, 20, 20);
-
-    c.fillStyle = "black";
-    c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
-
+    drawBasicGameScreen();
     if (isLeftMouseDown === true && hasABallBeenShotThisClick === false) {
       const newBall = new ball(true, 230, canvas.height - canvas.height / 10 - 100, "grey", 5, 0.2, BallToMouseAngle);
       ballList.push(newBall);
@@ -294,8 +285,8 @@ function drawBase() {
           bird.x = 300;
           bird.y = -800;
           bird.yvelocity = 0;
-          birdGone+=1
-          bird.markForDespawn = false
+          birdGone += 1;
+          bird.markForDespawn = false;
         }
       }
     });
@@ -311,9 +302,27 @@ document.onkeydown = function (e) {
 };
 
 function deletingTheBirds(object) {
-  birdGone += 1
-  object.x = canvas.width/2
-  object.y = canvas.height+10000
-
+  birdGone += 1;
+  object.x = canvas.width / 2;
+  object.y = canvas.height + 10000;
 }
+function drawLevelScreen() {
+  c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
+  ballList = [];
+  birdList = [];
+  c.fillStyle = "grey";
+  c.fillRect(0, canvas.height - canvas.height / 2, canvas.width, canvas.height / 3);
 
+  c.fillStyle = "grey";
+  c.font = "30px Arial";
+  c.fillText("Press Enter to go to the next level", 100, canvas.height / 2);
+}
+function drawBasicGameScreen() {
+  c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
+  c.fillStyle = "green";
+  c.fillRect(0, canvas.height - canvas.height / 10, canvas.width, canvas.height / 10);
+  c.fillText("Dollares:" + dollares, 20, 20);
+
+  c.fillStyle = "black";
+  c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
+}

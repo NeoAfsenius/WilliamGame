@@ -53,7 +53,7 @@ export class Bird {
     this.animationFrame = 0;
     this.animationTimer = 0;
   }
-  update(canvas, ballList, birdMissed, increaseDollares, decreaseDollares, birdGoneAdder) {
+  update(canvas, ballList, birdMissed, increaseDollares, decreaseDollares, birdGoneVariableAdder) {
     if (this.hasSineWave === true) {
       this.sinAngle += this.waveSpeed;
       this.y = this.baseY + Math.sin(this.sinAngle) * this.waveAmp;
@@ -89,8 +89,8 @@ export class Bird {
       this.x = 300;
       this.y = -800;
       this.yvelocity = 0;
-      birdMissed.push("kuk");
-      birdGoneAdder();
+      birdMissed.push("missed");
+      birdGoneVariableAdder();
       console.log("gone");
       this.outsideMark = true;
       if (this.hasSineWave === true) {

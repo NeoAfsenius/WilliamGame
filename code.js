@@ -41,7 +41,7 @@ function increaseDollares(amount) {
 function decreaseDollares(amount) {
   dollares -= amount
 }
-function birdGoneAdder() {
+function birdGoneVariableAdder() {
   birdGone += 1
 }
 export function changeLevelValue() {
@@ -55,8 +55,16 @@ console.log(
   `Bredd på canvas: ${canvas.width},
   Höjd på canvas: ${canvas.height}`
 );
-
-
+function centerTextOnXaxis(text,height) {
+  const textWidth = c.measureText(text).width
+  c.fillText(text, (canvas.width-textWidth)/2,height)
+}
+let gameState = {
+  dollares: 100,
+  birdGone: 0,
+  levelIsOn:true,
+  
+}
 let ballList = [];
 let birdList = [];
 let birdMissed = [];
@@ -66,13 +74,20 @@ let movingBirds = true;
 let levelIsOn = true;
 let levelNumber = 1;
 let currentlevel = new Level(1);
-let dollares = 0;
+let dollares = 100;
 let currentMaxBulletsPerLevel = 30
 let currentBulletAmount = 30
-spawnBird();
+let startScreen = true
 
 function drawBase() {
-  if (levelIsOn === false && birdGone >= currentlevel.maxBirdListLength && shopMenu === false) {
+  if (startScreen===true) {
+    drawLevelScreen()
+    if (keys.Enter) {
+      startScreen = false
+      spawnBird();
+    }
+  }
+  else if (levelIsOn === false && birdGone >= currentlevel.maxBirdListLength && shopMenu === false) {
     drawLevelScreen();
     if (keys.Enter) {
       levelNumber += 1;
@@ -102,7 +117,7 @@ function drawBase() {
     });
     birdList.forEach((Bird) => {
       //gör dessa två functioner för alla elements i listan
-      Bird.update(canvas,ballList,birdMissed,increaseDollares,decreaseDollares,birdGoneAdder);
+      Bird.update(canvas,ballList,birdMissed,increaseDollares,decreaseDollares,birdGoneVariableAdder);
       Bird.draw(c);
       if (Bird.markForDespawn === true) {
         Bird.timeSinceDewspawnMark += 1; //antar att den kör 60fps
@@ -112,7 +127,7 @@ function drawBase() {
           Bird.x = 300;
           Bird.y = -800;
           Bird.yvelocity = 0;
-          birdGoneAdder()
+          birdGoneVariableAdder()
           Bird.markForDespawn = false;
         }
       }
@@ -122,7 +137,7 @@ function drawBase() {
 }
 window.requestAnimationFrame(drawBase);
 function deletingTheBirds(object) {
-  birdGoneAdder()
+  birdGoneVariableAdder()
   object.x = canvas.width / 2;
   object.y = canvas.height + 10000;
 }
@@ -130,12 +145,22 @@ function drawLevelScreen() {
   c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
   ballList = [];
   birdList = [];
-  c.fillStyle = "grey";
-  c.fillRect(0, canvas.height - canvas.height / 2, canvas.width, canvas.height / 3);
-
-  c.fillStyle = "grey";
-  c.font = "23px 'Press Start 2P'";
-  c.fillText("Press Enter to go to the next level", 100, canvas.height / 2);
+  if (skyImage.complete) {
+    c.drawImage(skyImage,0,0,canvas.width,canvas.height)
+  }
+  if (grassImage.complete) {
+    c.drawImage(grassImage,0,canvas.height-canvas.height/10-20,canvas.width,canvas.height/10 + 20)
+  }
+  if (characterImage.complete) {
+    c.drawImage(characterImage,100, canvas.height - canvas.height / 10 - 170, 200, 200)
+  }
+  c.fillStyle="gold"
+  const startText1 = "Press Enter to start/continue the game"
+  c.font = ("35px 'Press Start 2P'")
+  centerTextOnXaxis(startText1,canvas.height/2)
+  const startText2 = "REMINDER you can press B at anytime to enter the shop"
+  c.font = ("20px 'Press Start 2P'")
+  centerTextOnXaxis(startText2,(canvas.height/2)+40)
 }
 function drawBasicGameScreen() {
   c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
@@ -155,7 +180,8 @@ function drawBasicGameScreen() {
   c.fillText("Current Bullets:" + currentBulletAmount, 20, 40)
   c.fillStyle = "yellow"
   c.font = "24px 'Press Start 2P'" 
-  c.fillText("Current Level Is:" + levelNumber, canvas.width/2,40)
+  const currentLevelText = "Current Level Is:" + levelNumber
+  centerTextOnXaxis(currentLevelText,40)
   if (characterImage.complete) {
     c.drawImage(characterImage,100, canvas.height - canvas.height / 10 - 170, 200, 200)
   }

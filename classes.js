@@ -1,4 +1,4 @@
-import { basicBallImage, birdImage1, birdImage2, deadBird } from "./code.js";
+import { basicBallImage, birdImage1, birdImage2, deadBird, gameState } from "./code.js";
 export function randomIntFromRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -53,7 +53,7 @@ export class Bird {
     this.animationFrame = 0;
     this.animationTimer = 0;
   }
-  update(canvas, ballList, birdMissed, increaseDollares, decreaseDollares, birdGoneVariableAdder) {
+  update(canvas, ballList, birdMissed) {
     if (this.hasSineWave === true) {
       this.sinAngle += this.waveSpeed;
       this.y = this.baseY + Math.sin(this.sinAngle) * this.waveAmp;
@@ -78,9 +78,9 @@ export class Bird {
         this.hasSineWave = false;
         this.markForDespawn = true;
         if (this.hasSineWave === true) {
-          increaseDollares(20);
+        gameState.dollares += 20
         } else {
-          increaseDollares(10);
+        gameState.dollares += 10
         }
       }
     }
@@ -90,13 +90,13 @@ export class Bird {
       this.y = -800;
       this.yvelocity = 0;
       birdMissed.push("missed");
-      birdGoneVariableAdder();
+      gameState.birdGone += 1
       console.log("gone");
       this.outsideMark = true;
       if (this.hasSineWave === true) {
-        decreaseDollares(10);
+        gameState.dollares -= 10
       } else {
-        decreaseDollares(5);
+        gameState.dollares -= 5
       }
       this.hasSineWave = false;
     }
@@ -128,6 +128,5 @@ export class Level {
       this.movingBirds = false;
       console.log("tihi");
     }
-    this.levelIsOn = true;
   }
 }

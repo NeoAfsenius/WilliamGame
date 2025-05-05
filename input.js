@@ -8,6 +8,12 @@ export let hasABallBeenShotThisClick = false;
 export let isLeftMouseDown = false;
 export let forceMouseDown = false;
 export let isBKeyPressed = false;
+export let is1KeyPressed = false;
+export let is2KeyPressed = false;
+export let is3KeyPressed = false;
+export let is4KeyPressed = false;
+export let is5KeyPressed = false;
+export let is6KeyPressed = false;
 export let shopMenu = false;
 export let ballToMouseAngle = 0; //måste sätta värde på allt med mouse för annars krånglar det med import osv
 export let balltoMouseX = 0;
@@ -49,13 +55,37 @@ export function allInputDocument(canvas) { //kopplar alla input varianter och ka
     if ((event.key === "b" || event.key === "B") && isBKeyPressed === false) {
       shopMenu = !shopMenu; // flippar på booliska värdet
       isBKeyPressed = true;
+    } else if (event.key === "1" && is1KeyPressed === false) {
+      is1KeyPressed = true;
+    } else if (event.key === "2" && is2KeyPressed === false) {
+      is2KeyPressed = true;
+    } else if (event.key === "3" && is3KeyPressed === false) {
+      is3KeyPressed = true;
+    } else if (event.key === "4" && is4KeyPressed === false) {
+      is4KeyPressed = true;
+    } else if (event.key === "5" && is5KeyPressed === false) {
+      is5KeyPressed = true;
+    } else if (event.key === "6" && is6KeyPressed === false) {
+      is6KeyPressed = true;
     }
   });
   document.addEventListener("keyup", function (event) {
     keys[event.key] = false;
     if (event.key === "b" || event.key === "B") {
       isBKeyPressed = false;
-    }
+    } else if (event.key === "1") {
+      is1KeyPressed = false;
+    } else if (event.key === "2") {
+      is2KeyPressed = false;
+    } else if (event.key === "3") {
+      is3KeyPressed = false;
+    } else if (event.key === "4") {
+      is4KeyPressed = false;
+    } else if (event.key === "5") {
+      is5KeyPressed = false;
+    } else if (event.key === "6") {
+      is6KeyPressed = false;
+    } 
   });
 
   document.addEventListener("mousemove", function (event) {

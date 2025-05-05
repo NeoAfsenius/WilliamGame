@@ -182,10 +182,10 @@ function drawShop() {
   c.fillStyle = "yellow";
   c.font = "16px 'Press Start 2P'";
   c.fillText("Press 1 to Buy Bigger Ballsack", 240, 180);
-  c.fillText("100 dollares", 240, 220);
+  c.fillText("100 dollares", 240, 200);
   c.fillText("Press 2 to Buy Zero Graaaav Ball", 240, 350);
   c.fillText("300 Dollares",240,370)
   c.fillText("Press 3 to Buy Reverse Graaaav Ball",240,520);
   c.fillText("300 Dollares",240,540)
-  
+
 }

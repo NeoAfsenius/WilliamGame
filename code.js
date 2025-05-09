@@ -198,13 +198,13 @@ function drawShop() {
   c.fillStyle = "yellow";
   c.font = "16px 'Press Start 2P'";
   c.fillText("Press 1 to Increase Ballsack by 10", 240, 180);
-  c.fillText("Cost:" + (10 + inventory.amountOfBiggerBallsack * 10) + "dollares", 240, 200);
+  c.fillText("Cost:" + (" " + 10 + inventory.amountOfBiggerBallsack * 10) + " Dollares", 240, 200);
   c.fillText("Press 2 to Buy Zero Graaaav Ball", 240, 350);
   c.fillText("Cost: 100 Dollares", 240, 370);
   c.fillText("Press 3 to Buy Reverse Graaaav Ball", 240, 520);
   c.fillText("Cost: 100 Dollares", 240, 540);
   c.fillText("Press 4 to Buy Normal Graaav Ball", 240, 690);
-  c.fillText("Cost: 10 dollares", 240, 710);
+  c.fillText("Cost: 10 Dollares", 240, 710);
   c.fillText("BOUGHT ITEMS", 1640, 180);
   c.fillText("Amount Of Bigger Ballsack Bought:" + inventory.amountOfBiggerBallsack, 1640, 220);
   c.fillStyle = "lime";

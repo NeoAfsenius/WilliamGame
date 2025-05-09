@@ -1,3 +1,4 @@
+
 import { birdList, randomIntFromRange, gameState } from "./code.js";
 import { Bird } from "./classes.js";
 import { shopMenu } from "./input.js";
@@ -8,7 +9,6 @@ export function spawnBird() {
   } else {
     if (gameState.birdGone >= gameState.currentLevel.maxBirdListLength) {
       gameState.levelIsOn = false;
-      setTimeout(spawnBird, 500); // fortsätt kontrollera så drawBase når villkoret
     } else if (birdList.length < gameState.currentLevel.maxBirdListLength) {
       const randomDelay = randomIntFromRange(1000, 3000); //random sekund mellan 1-3
       if (gameState.currentLevel.movingBirds === true) {

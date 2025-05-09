@@ -3,11 +3,10 @@ import { Bird } from "./classes.js";
 import { shopMenu } from "./input.js";
 
 export function spawnBird() {
-  console.log(gameState.birdGone)
-  console.log(currentlevel.maxBirdListLength)
-  if (shopMenu === false) {
+  if (shopMenu===true) {
+    setTimeout(spawnBird, 500);
+  }else{
     if (gameState.birdGone >= currentlevel.maxBirdListLength) {
-      console.log("h")
       gameState.levelIsOn = false;
       setTimeout(spawnBird, 500); // fortsätt kontrollera så drawBase når villkoret
     } else if (birdList.length < currentlevel.maxBirdListLength) {
@@ -22,10 +21,11 @@ export function spawnBird() {
       } else {
         setTimeout(spawnNormalBird, randomDelay); //keep spawning the bird
       }
+    } else {
+      setTimeout(spawnBird, 500);
     }
-  } else {
-    setTimeout(spawnBird, 500);
   }
+
 }
 function spawnNormalBird() {
   var newBird = new Bird(true, canvas.width + 50, randomIntFromRange(50, canvas.height - canvas.height / 10 - 30));

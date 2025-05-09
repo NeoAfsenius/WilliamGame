@@ -59,8 +59,8 @@ export function allInputDocument(canvas) {
       isBKeyPressed = true;
     } else if (event.key === "1" && is1KeyPressed === false) {
       is1KeyPressed = true;
-      if (shopMenu === true && gameState.dollares >= 100) {
-        gameState.dollares -= 100
+      if (shopMenu === true && gameState.dollares >= (10+inventory.amountOfBiggerBallsack*10)) {
+        gameState.dollares -= (10+inventory.amountOfBiggerBallsack*10)
         gameState.currentMaxBulletsPerLevel += 10
         gameState.currentBulletAmount += 10
         inventory.amountOfBiggerBallsack += 1

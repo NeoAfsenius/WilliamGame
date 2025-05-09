@@ -78,9 +78,9 @@ export class Bird {
         this.hasSineWave = false;
         this.markForDespawn = true;
         if (this.hasSineWave === true) {
-        gameState.dollares += 20
+          gameState.dollares += 20;
         } else {
-        gameState.dollares += 10
+          gameState.dollares += 10;
         }
       }
     }
@@ -90,13 +90,13 @@ export class Bird {
       this.y = -800;
       this.yvelocity = 0;
       birdMissed.push("missed");
-      gameState.birdGone += 1
+      gameState.birdGone += 1;
       console.log("gone");
       this.outsideMark = true;
       if (this.hasSineWave === true) {
-        gameState.dollares -= 10
+        gameState.dollares -= 10;
       } else {
-        gameState.dollares -= 5
+        gameState.dollares -= 5;
       }
       this.hasSineWave = false;
     }

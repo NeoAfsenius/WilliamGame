@@ -1,4 +1,4 @@
-import { inventory,gameState, currentlevel } from "./code.js";
+import { inventory, gameState } from "./code.js";
 export let keys = {}; //En lista som håller kolla på alla aktiva och deaktiva knappar
 export let mouse = {
   x: innerWidth / 2,
@@ -59,44 +59,44 @@ export function allInputDocument(canvas) {
       isBKeyPressed = true;
     } else if (event.key === "1" && is1KeyPressed === false) {
       is1KeyPressed = true;
-      if (shopMenu === true && gameState.dollares >= (10+inventory.amountOfBiggerBallsack*10)) {
-        gameState.dollares -= (10+inventory.amountOfBiggerBallsack*10)
-        gameState.currentMaxBulletsPerLevel += 10
-        gameState.currentBulletAmount += 10
-        inventory.amountOfBiggerBallsack += 1
+      if (shopMenu === true && gameState.dollares >= 10 + inventory.amountOfBiggerBallsack * 10) {
+        gameState.dollares -= 10 + inventory.amountOfBiggerBallsack * 10;
+        gameState.currentMaxBulletsPerLevel += 10;
+        gameState.currentBulletAmount += 10;
+        inventory.amountOfBiggerBallsack += 1;
       }
     } else if (event.key === "2" && is2KeyPressed === false) {
       is2KeyPressed = true;
       if (shopMenu === true && gameState.dollares >= 100 && inventory.zeroGraaavBought === false) {
-        gameState.dollares -= 100
-        gameState.currentGravity = 0
-        inventory.zeroGraaavEquipped = true
-        inventory.zeroGraaavBought = true
-        inventory.reverseGraavEquipped = false
+        gameState.dollares -= 100;
+        gameState.currentGravity = 0;
+        inventory.zeroGraaavEquipped = true;
+        inventory.zeroGraaavBought = true;
+        inventory.reverseGraavEquipped = false;
       }
     } else if (event.key === "3" && is3KeyPressed === false) {
       is3KeyPressed = true;
       if (shopMenu === true && gameState.dollares >= 100 && inventory.reverseGraavBought === false) {
-        gameState.dollares -= 100
-        gameState.currentGravity = -0.3
-        inventory.reverseGraavEquipped = true
-        inventory.reverseGraavBought = true
-        inventory.zeroGraaavEquipped = false
+        gameState.dollares -= 100;
+        gameState.currentGravity = -0.3;
+        inventory.reverseGraavEquipped = true;
+        inventory.reverseGraavBought = true;
+        inventory.zeroGraaavEquipped = false;
       }
     } else if (event.key === "4" && is4KeyPressed === false) {
       is4KeyPressed = true;
       if (shopMenu === true && gameState.dollares >= 10 && inventory.normalGraavBought === false) {
-        gameState.dollares -= 10
-        gameState.currentGravity = 0.2
-        inventory.zeroGraaavEquipped = false
-        inventory.reverseGraavEquipped = false
+        gameState.dollares -= 10;
+        gameState.currentGravity = 0.2;
+        inventory.zeroGraaavEquipped = false;
+        inventory.reverseGraavEquipped = false;
       }
     } else if (event.key === "5" && is5KeyPressed === false) {
       is5KeyPressed = true;
-      console.log(gameState.birdGone)
-      console.log(currentlevel.maxBirdListLength)
-      console.log(gameState.levelIsOn)
-      console.log(shopMenu)
+      console.log(gameState.birdGone);
+      console.log(gameState.currentLevel.maxBirdListLength);
+      console.log(gameState.levelIsOn);
+      console.log(shopMenu);
     } else if (event.key === "6" && is6KeyPressed === false) {
       is6KeyPressed = true;
     }

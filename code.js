@@ -1,7 +1,7 @@
 import { spawnBird } from "./spawn.js";
 import { Ball, Bird, Level } from "./classes.js";
 import { keys, mouse, isLeftMouseDown, forceMouseDown, shopMenu, mouseX, mouseY, ballToMouseAngle, balltoMouseX, balltoMousey, allInputDocument, hasABallBeenShotThisClick, setHasBallBeenShot } from "./input.js";
-export { birdList, currentlevel, randomIntFromRange };
+export { birdList, randomIntFromRange };
 console.log("sigma boi");
 let canvas = document.querySelector("canvas");
 allInputDocument(canvas);
@@ -55,7 +55,9 @@ export let gameState = {
   currentMaxBulletsPerLevel: 20,
   currentBulletAmount: 20,
   currentGravity: 0.2,
-  levelIsOn:true
+  levelIsOn: true,
+  startScreen: true,
+  currentLevel: new Level(1),
 };
 export let inventory = {
   amountOfBiggerBallsack: 0,
@@ -69,23 +71,19 @@ export let inventory = {
 let ballList = [];
 let birdList = [];
 let birdMissed = [];
-let birdHit = birdList.length - birdMissed.length;
-let levelIsOn = true;
-let currentlevel = new Level(1);
-let startScreen = true;
 
 function drawBase() {
-  if (startScreen === true) {
+  if (gameState.startScreen === true) {
     drawLevelScreen();
     if (keys.Enter) {
-      startScreen = false;
+      gameState.startScreen = false;
       spawnBird();
     }
-  } else if (gameState.levelIsOn === false && gameState.birdGone >= currentlevel.maxBirdListLength && shopMenu === false) {
+  } else if (gameState.levelIsOn === false && gameState.birdGone >= gameState.currentLevel.maxBirdListLength && shopMenu === false) {
     drawLevelScreen();
     if (keys.Enter) {
       gameState.levelNumber += 1;
-      currentlevel = new Level(gameState.levelNumber);
+      gameState.currentLevel = new Level(gameState.levelNumber);
       gameState.birdGone = 0;
       gameState.levelIsOn = true;
       gameState.currentBulletAmount = gameState.currentMaxBulletsPerLevel;
@@ -200,7 +198,7 @@ function drawShop() {
   c.fillStyle = "yellow";
   c.font = "16px 'Press Start 2P'";
   c.fillText("Press 1 to Increase Ballsack by 10", 240, 180);
-  c.fillText("Cost:" + (10+inventory.amountOfBiggerBallsack*10)+ "dollares", 240, 200);
+  c.fillText("Cost:" + (10 + inventory.amountOfBiggerBallsack * 10) + "dollares", 240, 200);
   c.fillText("Press 2 to Buy Zero Graaaav Ball", 240, 350);
   c.fillText("Cost: 100 Dollares", 240, 370);
   c.fillText("Press 3 to Buy Reverse Graaaav Ball", 240, 520);

@@ -97,8 +97,9 @@ export function allInputDocument(canvas) {
       console.log(gameState.currentLevel.maxBirdListLength);
       console.log(gameState.levelIsOn);
       console.log(shopMenu);
-    } else if (event.key === "6" && is6KeyPressed === false) {
+    } else if (event.key === "6" && is6KeyPressed === false && gameState.gameOver===true) {
       is6KeyPressed = true;
+      location.reload()
     }
   });
   document.addEventListener("keyup", function (event) {

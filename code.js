@@ -58,6 +58,7 @@ export let gameState = {
   levelIsOn: true,
   startScreen: true,
   currentLevel: new Level(1),
+  gameOver: false,
 };
 export let inventory = {
   amountOfBiggerBallsack: 0,
@@ -79,7 +80,7 @@ function drawBase() {
       gameState.startScreen = false;
       spawnBird();
     }
-  } else if (gameState.levelIsOn === false && gameState.birdGone >= gameState.currentLevel.maxBirdListLength && shopMenu === false) {
+  } else if (gameState.gameOver === false && gameState.levelIsOn === false && gameState.birdGone >= gameState.currentLevel.maxBirdListLength && shopMenu === false) {
     drawLevelScreen();
     if (keys.Enter) {
       gameState.levelNumber += 1;
@@ -93,10 +94,10 @@ function drawBase() {
     drawShop();
   } else if (gameState.dollares < 0) {
     drawGameOver();
-    setTimeout(location.reload(), 20000);
+    gameState.gameOver = true;
   } else {
     drawBasicGameScreen();
-    if (isLeftMouseDown === true && hasABallBeenShotThisClick === false && gameState.currentBulletAmount > 0) {
+    if (gameState.gameOver === false && isLeftMouseDown === true && hasABallBeenShotThisClick === false && gameState.currentBulletAmount > 0) {
       const newBall = new Ball(true, 230, canvas.height - canvas.height / 10 - 100, "grey", 5, gameState.currentGravity, ballToMouseAngle);
       ballList.push(newBall);
       setHasBallBeenShot(true); // ändrar värdet på hasABallBeenShotThisClick genom att använda en function då när man importar skapas den som en const
@@ -198,7 +199,7 @@ function drawShop() {
   c.fillStyle = "yellow";
   c.font = "16px 'Press Start 2P'";
   c.fillText("Press 1 to Increase Ballsack by 10", 240, 180);
-  c.fillText("Cost:" + (" " + 10 + inventory.amountOfBiggerBallsack * 10) + " Dollares", 240, 200);
+  c.fillText("Cost: " + (10 + inventory.amountOfBiggerBallsack * 10) + " Dollares", 240, 200);
   c.fillText("Press 2 to Buy Zero Graaaav Ball", 240, 350);
   c.fillText("Cost: 100 Dollares", 240, 370);
   c.fillText("Press 3 to Buy Reverse Graaaav Ball", 240, 520);
@@ -225,4 +226,6 @@ function drawGameOver() {
   c.font = "40px 'Press Start 2P'";
   let gameOverText = "GAME OVER";
   centerTextOnXaxis(gameOverText, canvas.height / 2);
+  let GameOverTextButtonText = "Press 6 to restart";
+  centerTextOnXaxis(GameOverTextButtonText, canvas.height / 2 - 50);
 }

@@ -4,6 +4,7 @@ import { Bird } from "./classes.js";
 import { shopMenu } from "./input.js";
 
 export function spawnBird() {
+  console.log("Current Max Bird" + gameState.currentLevel.maxBirdListLength)
   if (shopMenu === true) {
     setTimeout(spawnBird, 500);
   } else {

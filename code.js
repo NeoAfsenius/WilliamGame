@@ -1,6 +1,6 @@
 import { spawnBird } from "./spawn.js";
-import { Ball, Bird, Level } from "./classes.js";
-import { keys, mouse, isLeftMouseDown, forceMouseDown, shopMenu, mouseX, mouseY, ballToMouseAngle, balltoMouseX, balltoMousey, allInputDocument, hasABallBeenShotThisClick, setHasBallBeenShot } from "./input.js";
+import { Ball, Level } from "./classes.js";
+import { keys, isLeftMouseDown, shopMenu, ballToMouseAngle, allInputDocument, hasABallBeenShotThisClick, setHasBallBeenShot } from "./input.js";
 export { birdList, randomIntFromRange };
 console.log("sigma boi");
 let canvas = document.querySelector("canvas");
@@ -221,5 +221,5 @@ function drawGameOver() {
   let gameOverText = "GAME OVER";
   centerTextOnXaxis(gameOverText, canvas.height / 2);
   let GameOverTextButtonText = "Press 6 to restart";
-  centerTextOnXaxis(GameOverTextButtonText, canvas.height / 2 - 50);
+  centerTextOnXaxis(GameOverTextButtonText, canvas.height / 2 + 50);
 }

@@ -107,8 +107,6 @@ export class Bird {
     }
   }
   draw(c) {
-    // c.fillStyle = "black";
-    // c.fillRect(this.x, this.y, 30, 30);
     if (this.markForDespawn === true && deadBird.complete) {
       c.drawImage(deadBird, this.x - 40, this.y - 40, 100, 100);
     } else if (this.animationFrame === 0 && birdImage1.complete) {

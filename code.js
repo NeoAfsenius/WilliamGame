@@ -133,12 +133,6 @@ function drawBase() {
 }
 window.requestAnimationFrame(drawBase);
 
-function deletingTheBirds(object) {
-  gameState.birdGone += 1;
-  object.x = canvas.width / 2;
-  object.y = canvas.height + 10000;
-}
-
 function drawLevelScreen() {
   c.clearRect(0, 0, canvas.width, canvas.height); //resettar hela skärmen
   ballList = [];

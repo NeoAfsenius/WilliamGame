@@ -6,7 +6,7 @@ import { shopMenu } from "./input.js";
 export function spawnBird() {
   console.log("Current Max Bird" + gameState.currentLevel.maxBirdListLength)
   if (shopMenu === true) {
-    setTimeout(spawnBird, 500);
+    setTimeout(spawnBird, 500); //om man är inne i shoppen så spawnar inte fåglar men loopen ändras inte
   } else {
     if (gameState.birdGone >= gameState.currentLevel.maxBirdListLength) {
       gameState.levelIsOn = false;
@@ -15,12 +15,11 @@ export function spawnBird() {
       if (gameState.currentLevel.movingBirds === true) {
         let spawnOrNo = randomIntFromRange(1, 3);
         if (spawnOrNo === 1) {
-          setTimeout(spawnMovingBird, randomDelay); //keep spawning the bird
-        } else {
-          setTimeout(spawnNormalBird, randomDelay); //keep spawning the bird
+          setTimeout(spawnMovingBird, randomDelay); 
+          setTimeout(spawnNormalBird, randomDelay);
         }
       } else {
-        setTimeout(spawnNormalBird, randomDelay); //keep spawning the bird
+        setTimeout(spawnNormalBird, randomDelay);
       }
     } else {
       setTimeout(spawnBird, 500);

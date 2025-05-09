@@ -1,7 +1,7 @@
 import { spawnBird } from "./spawn.js";
 import { Ball, Bird, Level } from "./classes.js";
 import { keys, mouse, isLeftMouseDown, forceMouseDown, shopMenu, mouseX, mouseY, ballToMouseAngle, balltoMouseX, balltoMousey, allInputDocument, hasABallBeenShotThisClick, setHasBallBeenShot } from "./input.js";
-export { birdList, currentlevel, levelIsOn, randomIntFromRange };
+export { birdList, currentlevel, randomIntFromRange };
 console.log("sigma boi");
 let canvas = document.querySelector("canvas");
 allInputDocument(canvas);
@@ -36,9 +36,6 @@ export const shop = new Image();
 shop.src = "./img/shop.png";
 
 //dessa functioner används för att ändra värden på variablar som gör till constanter vid import
-export function changeLevelValue() {
-  levelIsOn = !levelIsOn;
-}
 //random number generator, mindre matte i koden
 function randomIntFromRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -57,7 +54,8 @@ export let gameState = {
   levelNumber: 1,
   currentMaxBulletsPerLevel: 20,
   currentBulletAmount: 20,
-  currentGravity: 0.2
+  currentGravity: 0.2,
+  levelIsOn:true
 };
 export let inventory = {
   amountOfBiggerBallsack: 0,
@@ -65,7 +63,7 @@ export let inventory = {
   zeroGraaavEquipped: false,
   reverseGraavBought: false,
   reverseGraavEquipped: false,
-  normalGraavBought: false
+  normalGraavBought: false,
 };
 
 let ballList = [];
@@ -83,18 +81,21 @@ function drawBase() {
       startScreen = false;
       spawnBird();
     }
-  } else if (levelIsOn === false && gameState.birdGone >= currentlevel.maxBirdListLength && shopMenu === false) {
+  } else if (gameState.levelIsOn === false && gameState.birdGone >= currentlevel.maxBirdListLength && shopMenu === false) {
     drawLevelScreen();
     if (keys.Enter) {
       gameState.levelNumber += 1;
       currentlevel = new Level(gameState.levelNumber);
       gameState.birdGone = 0;
-      levelIsOn = true;
+      gameState.levelIsOn = true;
       gameState.currentBulletAmount = gameState.currentMaxBulletsPerLevel;
       spawnBird();
     }
   } else if (shopMenu === true) {
     drawShop();
+  } else if (gameState.dollares < 0) {
+    drawGameOver();
+    setTimeout(location.reload(), 20000);
   } else {
     drawBasicGameScreen();
     if (isLeftMouseDown === true && hasABallBeenShotThisClick === false && gameState.currentBulletAmount > 0) {
@@ -204,24 +205,26 @@ function drawShop() {
   c.fillText("Cost: 100 Dollares", 240, 370);
   c.fillText("Press 3 to Buy Reverse Graaaav Ball", 240, 520);
   c.fillText("Cost: 100 Dollares", 240, 540);
-  c.fillText("Press 4 to Buy Normal Graaav Ball", 240, 690)
-  c.fillText("Cost: 10 dollares", 240, 710)
-  c.fillText("BOUGHT ITEMS", 1640,180)
-  c.fillText("Amount Of Bigger Ballsack Bought:" + inventory.amountOfBiggerBallsack, 1640, 220)
-  c.font = "24px 'Press Start 2P'";
-  c.fillStyle = "lime"
-  const currentDollaresText = "Dollares:$" + gameState.dollares + "$";
-  centerTextOnXaxis(currentDollaresText, 100);
+  c.fillText("Press 4 to Buy Normal Graaav Ball", 240, 690);
+  c.fillText("Cost: 10 dollares", 240, 710);
+  c.fillText("BOUGHT ITEMS", 1640, 180);
+  c.fillText("Amount Of Bigger Ballsack Bought:" + inventory.amountOfBiggerBallsack, 1640, 220);
+  c.fillStyle = "lime";
+  c.fillText("Current Dollares:$" + gameState.dollares + "$", 1640, 140);
   c.fillStyle = "yellow";
   c.font = "16px 'Press Start 2P'";
 
-
-
   if (inventory.zeroGraaavEquipped === true) {
-    c.fillText("Ball Equipped: Zero Graaav", 1640, 300)
+    c.fillText("Ball Equipped: Zero Graaav", 1640, 300);
   } else if (inventory.reverseGraavEquipped === true) {
-    c.fillText("Ball Equipped: Reverse Graaav", 1640, 300)
+    c.fillText("Ball Equipped: Reverse Graaav", 1640, 300);
   } else {
-    c.fillText("Ball Equipped: Normal Graaav", 1640, 300)
+    c.fillText("Ball Equipped: Normal Graaav", 1640, 300);
   }
+}
+function drawGameOver() {
+  c.fillStyle = "red";
+  c.font = "40px 'Press Start 2P'";
+  let gameOverText = "GAME OVER";
+  centerTextOnXaxis(gameOverText, canvas.height / 2);
 }

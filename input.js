@@ -1,4 +1,4 @@
-import { inventory,gameState } from "./code.js";
+import { inventory,gameState, currentlevel } from "./code.js";
 export let keys = {}; //En lista som håller kolla på alla aktiva och deaktiva knappar
 export let mouse = {
   x: innerWidth / 2,
@@ -93,7 +93,10 @@ export function allInputDocument(canvas) {
       }
     } else if (event.key === "5" && is5KeyPressed === false) {
       is5KeyPressed = true;
-      
+      console.log(gameState.birdGone)
+      console.log(currentlevel.maxBirdListLength)
+      console.log(gameState.levelIsOn)
+      console.log(shopMenu)
     } else if (event.key === "6" && is6KeyPressed === false) {
       is6KeyPressed = true;
     }

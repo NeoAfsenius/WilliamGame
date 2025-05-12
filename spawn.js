@@ -16,6 +16,7 @@ export function spawnBird() {
         let spawnOrNo = randomIntFromRange(1, 3);
         if (spawnOrNo === 1) {
           setTimeout(spawnMovingBird, randomDelay); 
+        } else{
           setTimeout(spawnNormalBird, randomDelay);
         }
       } else {

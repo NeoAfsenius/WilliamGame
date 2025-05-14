@@ -75,10 +75,10 @@ export class Bird {
         this.xvelocity = 0;
         this.yvelocity = 10;
         ballList.splice(i, 1);
-        this.hasSineWave = false;
         this.markForDespawn = true;
         if (this.hasSineWave === true) {
           gameState.dollares += 20;
+          this.hasSineWave = false;
         } else {
           gameState.dollares += 10;
         }

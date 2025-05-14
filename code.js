@@ -49,7 +49,7 @@ function centerTextOnXaxis(text, height) {
   c.fillText(text, (canvas.width - textWidth) / 2, height);
 }
 export let gameState = {
-  dollares: 100,
+  dollares: 10,
   birdGone: 0,
   levelNumber: 1,
   currentMaxBulletsPerLevel: 20,
@@ -152,11 +152,13 @@ function drawLevelScreen() {
 
   c.fillStyle = "gold";
   const startText1 = "Press Enter to start/continue the game";
-  c.font = "35px 'Press Start 2P'";
+  c.font = "30px 'Press Start 2P'";
   centerTextOnXaxis(startText1, canvas.height / 2);
   const startText2 = "REMINDER you can press B at anytime to enter the shop";
   c.font = "20px 'Press Start 2P'";
   centerTextOnXaxis(startText2, canvas.height / 2 + 40);
+  const percentView = ("Use 80% viewheight for best experience")
+  centerTextOnXaxis(percentView, canvas.height/2+95)
 }
 
 function drawBasicGameScreen() {
@@ -180,8 +182,6 @@ function drawBasicGameScreen() {
   const currentLevelText = "Current Level Is:" + gameState.levelNumber;
   centerTextOnXaxis(currentLevelText, 40);
   c.drawImage(characterImage, 100, canvas.height - canvas.height / 10 - 170, 200, 200);
-  if (isLeftMouseDown === true && hasABallBeenShotThisClick === false) {
-  }
   //   c.fillStyle = "black";
   //   c.fillRect(200, canvas.height - canvas.height / 10 - 100, 30, 100);
 }
